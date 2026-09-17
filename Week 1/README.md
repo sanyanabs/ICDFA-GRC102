@@ -1,56 +1,59 @@
-# GRC102 – Week 2 Practical Laboratory
+# GRC102 – Week 1 Practical Laboratory
 
-## Developing Security Policies and Procedures
+## Information Security Governance in Action
 
-This folder contains my evidence for the GRC102 Week 2 Practical Laboratory focused on developing information security policies and procedures.
+This folder contains my evidence for the GRC102 Week 1 Practical Laboratory based on the GlobalHealth Connect (GHC) executive governance simulation.
 
 ## Evidence Bundles
 
-### 1. Information Security Policy
+### 1. Governance Blueprint
 
-- Information security policy development
-- Policy objectives and scope
-- Roles and responsibilities
-- Security governance requirements
+- Current-state governance gap assessment
+- Proposed governance organisational chart
+- RACI responsibility matrix
+- Governance rationale
 
-### 2. Security Procedures
+### 2. Information Security Charter
 
-- Supporting security procedures
-- Defined processes and responsibilities
-- Operational security requirements
-- Procedures for implementing security controls
+- GHC Information Security Charter
+- CFO justification memo
 
-### 3. Policy Implementation
+### 3. Board Reporting
 
-- Policy implementation considerations
-- Roles and accountability
-- Communication and awareness requirements
-- Policy enforcement considerations
+- Board Executive Summary
+- Five selected security metrics
+- Six-month trends and business commentary
+- Priority risks and recommendations
+- Metric selection rationale
 
-### 4. Policy Review and Maintenance
+### 4. Security Steering Committee
 
-- Policy review requirements
-- Monitoring and compliance considerations
-- Updating policies and procedures
-- Continuous improvement
+- Security Steering Committee Terms of Reference
+- First meeting agenda
+- CEO briefing note
 
-## Security Governance Themes
+### 5. Governance Maturity
+
+- Current maturity assessment
+- 12–18 month improvement roadmap
+- Board-level executive summary
+
+## Governance Themes
 
 The practical focuses on:
 
 - Accountability
-- Policy development
+- Business alignment
 - Risk management
-- Security responsibilities
-- Compliance
-- Control implementation
+- Board oversight
+- Transparency
+- Security governance
 - Continuous improvement
 
-## Practical Evidence
+## Organisation
 
-The completed practical submission is available below:
-
-- [GRC102_W2_Practical_Imelda_Sanya.pdf](./GRC102_W2_Practical_Imelda_Sanya.pdf)
+**GlobalHealth Connect (GHC)**  
+Cloud-based patient-management technology provider
 
 ## Course
 
