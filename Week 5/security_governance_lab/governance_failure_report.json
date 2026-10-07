@@ -1,0 +1,77 @@
+{
+  "report_timestamp": "2026-10-07T22:51:26.918366+03:00",
+  "environment": "Local ICDFA GRC102 Security Governance Lab",
+  "scope": "Authorized local Docker simulation only",
+  "failure_count": 6,
+  "failures": [
+    {
+      "area": "Patch and Vulnerability Management",
+      "severity": "High",
+      "finding": "Known Apache Struts S2-045 vulnerability remains present.",
+      "evidence": "X-Vulnerable=true",
+      "impact": "A known critical vulnerability remains in the environment, indicating that vulnerability identification has not yet resulted in effective remediation."
+    },
+    {
+      "area": "Authentication and Access Control",
+      "severity": "High",
+      "finding": "Database application account has a wildcard host restriction.",
+      "evidence": "app_user\t%",
+      "impact": "The application database account is permitted from a broad host scope rather than being restricted to an approved source."
+    },
+    {
+      "area": "Network Segmentation",
+      "severity": "High",
+      "finding": "Database TCP/3306 is reachable from the monitoring container on the shared lab network.",
+      "evidence": "TCP/3306 reachable from monitoring container",
+      "impact": "The baseline environment does not yet enforce network segmentation that restricts database connectivity."
+    },
+    {
+      "area": "Policy Implementation and Governance",
+      "severity": "Medium",
+      "finding": "Governance policies exist but baseline controls are not implemented.",
+      "evidence": [
+        {
+          "id": "CTL-001",
+          "name": "Patch Management Process",
+          "status": "Planned"
+        },
+        {
+          "id": "CTL-002",
+          "name": "Vulnerability Scanning",
+          "status": "Planned"
+        },
+        {
+          "id": "CTL-003",
+          "name": "Incident Response Process",
+          "status": "Planned"
+        }
+      ],
+      "impact": "Policies alone do not provide assurance that security requirements are operating effectively."
+    },
+    {
+      "area": "Security Monitoring",
+      "severity": "Medium",
+      "finding": "No dedicated security monitoring control is recorded in the baseline tracker.",
+      "evidence": "No monitoring control found in governance_data.json",
+      "impact": "Security events may not be consistently detected, recorded and escalated."
+    },
+    {
+      "area": "Governance Metrics and Measurement",
+      "severity": "Medium",
+      "finding": "Baseline security metrics show performance gaps.",
+      "evidence": [
+        {
+          "metric": "Patch Compliance",
+          "target": 95.0,
+          "actual": 0.0
+        },
+        {
+          "metric": "Security Incidents",
+          "target": 0.0,
+          "actual": 1.0
+        }
+      ],
+      "impact": "Management metrics identify security performance issues that require remediation and follow-up."
+    }
+  ]
+}

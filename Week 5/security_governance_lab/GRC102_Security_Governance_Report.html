@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GRC102 Security Governance Simulation</title>
+<style>
+@page {
+    size: A4;
+    margin: 18mm;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #222;
+    line-height: 1.55;
+    font-size: 11pt;
+}
+
+h1 {
+    font-size: 26pt;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #222;
+}
+
+h2 {
+    font-size: 20pt;
+    margin-top: 34px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+h3 {
+    font-size: 15pt;
+    margin-top: 25px;
+}
+
+p {
+    margin: 9px 0;
+}
+
+img {
+    max-width: 92%;
+    height: auto;
+    display: block;
+    margin: 18px auto;
+    page-break-inside: avoid;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 9.5pt;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 7px;
+    vertical-align: top;
+}
+
+th {
+    background: #eeeeee;
+}
+
+code {
+    font-family: Menlo, Monaco, monospace;
+    background: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+pre {
+    background: #f5f5f5;
+    padding: 12px;
+    border: 1px solid #ddd;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 9pt;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 30px 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+@media print {
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+
+    img {
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: avoid;
+    }
+}
+</style>
+</head>
+<body>
+<h1>GRC102 Security Governance Simulation</h1>
+<h2>Practical Lab 8 — Monitoring, Auditing Controls and Executive Reporting</h2>
+<p><strong>Student:</strong> Imelda Sanya</p>
+<p><strong>Registration Number:</strong> C11/26/CGRCE/17576  </p>
+<p><strong>Environment:</strong> Local Docker-based ICDFA GRC102 Security Governance Lab  </p>
+<p><strong>Reporting Date:</strong> 7 October 2026</p>
+<hr>
+<h1>Introduction</h1>
+<p>This practical lab was completed as a local security governance simulation. I built the environment with Docker on my Mac and used only synthetic data and containers created for the lab.</p>
+<p>The purpose was not just to identify technical vulnerabilities. The main focus was to show how technical weaknesses can become governance problems when there is no effective patching process, monitoring, network separation, access control, or management follow-up.</p>
+<p>The lab was completed in four parts:</p>
+<ol>
+<li>Establish and assess the baseline environment.</li>
+<li>Simulate a security incident and analyse the governance failures behind it.</li>
+<li>Implement and verify security and governance controls.</li>
+<li>Measure the results and present them in an executive format.</li>
+</ol>
+<p>All testing was performed locally. No public systems, third-party systems, real customer information, or real credentials were used.</p>
+<hr>
+<h1>Part 1 — Baseline Security and Governance Assessment</h1>
+<h2>1.1 Lab Environment</h2>
+<p>The initial environment consisted of three Docker containers:</p>
+<ul>
+<li><code>web_server</code> — the customer-facing application.</li>
+<li><code>database_server</code> — MySQL containing synthetic customer data.</li>
+<li><code>monitoring_server</code> — a separate container used for monitoring and security checks.</li>
+</ul>
+<p>The application was based on an intentionally vulnerable Apache Struts version so that the lab could demonstrate how an identified vulnerability could become a governance issue.</p>
+<p>The web application was exposed only on the local machine through:</p>
+<p><code>127.0.0.1:8080</code></p>
+<p>The database did not have a host port exposed.</p>
+<p><img src="evidence/screenshots/P1-01 — Docker images.png" alt="P1-01 — Docker Images"></p>
+<p><img src="evidence/screenshots/P1-02 — Running Docker Containers.png" alt="P1-02 — Running Docker Containers"></p>
+<p><img src="evidence/screenshots/P1-03 — Isolated Lab Docker Network.png" alt="P1-03 — Docker Network"></p>
+<p>The initial environment used a shared Docker network. This was useful for demonstrating the baseline weakness because the monitoring container could reach the database service over TCP/3306.</p>
+<hr>
+<h2>1.2 Local Web Application Verification</h2>
+<p>The web application was checked locally to confirm that the lab environment was running.</p>
+<p><img src="evidence/screenshots/P1-04 — Verify the vulnerable web application locally.png" alt="P1-04 — Local Web Application"></p>
+<p>The application was deliberately kept local and was not exposed to the public internet.</p>
+<hr>
+<h2>1.3 Synthetic Database Verification</h2>
+<p>The database contained only synthetic records created for this exercise.</p>
+<p><img src="evidence/screenshots/P1-05 — Verify the database.png" alt="P1-05 — Synthetic Database"></p>
+<p>No real customer information was used.</p>
+<hr>
+<h2>1.4 Baseline Vulnerability Assessment</h2>
+<p>The baseline assessment identified Apache Struts S2-045 / CVE-2017-5638 as the main application vulnerability.</p>
+<p>The scanner used a safe detection method and did not execute an actual Struts exploit.</p>
+<p><img src="evidence/screenshots/P1-06 — Struts S2-045 Baseline Detection.png" alt="P1-06 — Struts S2-045 Baseline Detection"></p>
+<p>The baseline database assessment also showed that the application database account was configured with a broad host permission.</p>
+<p>The account was initially:</p>
+<p><code>app_user@%</code></p>
+<p>This meant the account was not restricted to connections originating from the local database host.</p>
+<p><img src="evidence/screenshots/P1-07 — Baseline Database Authentication.png" alt="P1-07 — Baseline Database Authentication"></p>
+<hr>
+<h2>1.5 Baseline Network Reachability</h2>
+<p>The initial Docker network allowed the monitoring container to reach the database service on TCP/3306.</p>
+<p>This was used as the baseline evidence for the network segmentation weakness.</p>
+<p><img src="evidence/screenshots/P1-08 — Baseline Database Network Reachability.png" alt="P1-08 — Baseline Database Network Reachability"></p>
+<p>The important point here is that this evidence demonstrates monitoring-to-database reachability. It does not demonstrate that the web application could directly connect to the database.</p>
+<hr>
+<h2>1.6 Baseline Vulnerability Scanner Results</h2>
+<p>The vulnerability scanner was run against the local lab environment.</p>
+<p><img src="evidence/screenshots/P1-09 — Baseline Vulnerability Scanner Results.png" alt="P1-09 — Baseline Vulnerability Scanner Results"></p>
+<p>The baseline findings were used as the starting point for the governance assessment.</p>
+<p>The main issues were:</p>
+<ul>
+<li>Vulnerable Apache Struts condition.</li>
+<li>Broad database application account host permission.</li>
+<li>Insufficient network separation between monitoring and database services.</li>
+<li>Lack of an implemented security monitoring control.</li>
+<li>Governance controls were still recorded as planned.</li>
+</ul>
+<hr>
+<h2>1.7 Baseline Governance Position</h2>
+<p>The governance tracker initially contained:</p>
+<ul>
+<li>3 policies.</li>
+<li>3 planned controls.</li>
+<li>3 open risks.</li>
+<li>1 security incident.</li>
+<li>3 governance metrics.</li>
+<li>1 audit record.</li>
+</ul>
+<p><img src="evidence/screenshots/P1-10 — Baseline Governance Tracker Dashboard.png" alt="P1-10 — Baseline Governance Tracker"></p>
+<p>The baseline position showed that policies existed, but the technical controls needed to enforce those policies had not yet been implemented.</p>
+<p>This was an important finding from the exercise. Having a policy recorded in a governance system does not by itself mean that the organisation is protected.</p>
+<hr>
+<h1>Part 2 — Governance Failure Analysis</h1>
+<h2>2.1 Safe Attack Simulation</h2>
+<p>A controlled simulation was performed against the local web application.</p>
+<p>The simulation used a safe detection mechanism to represent the Struts S2-045 condition. No real exploit payload was executed.</p>
+<p>The simulation recorded the possibility of application-level access to the synthetic customer database and three synthetic records were used for the exercise.</p>
+<p><img src="evidence/screenshots/P2-01 — Authorized Attack Simulation Log.png" alt="P2-01 — Authorized Attack Simulation"></p>
+<p>The <code>success</code> value in the simulation log represents successful completion of the simulation. It does not mean that a real exploit was executed.</p>
+<p>The simulation explicitly records:</p>
+<ul>
+<li><code>execution_mode: SAFE_SIMULATION</code></li>
+<li><code>actual_exploit_executed: false</code></li>
+<li>Synthetic database used.</li>
+<li>Three synthetic records involved.</li>
+</ul>
+<hr>
+<h2>2.2 Governance Failures Identified</h2>
+<p>The governance analysis identified six areas where the technical weakness was connected to a governance weakness.</p>
+<p><img src="evidence/screenshots/P2-02_Governance_Failure_Analysis.png" alt="P2-02 — Governance Failure Analysis"></p>
+<h3>1. Patch and Vulnerability Management</h3>
+<p>The application was running a vulnerable Struts version even though the vulnerability was known.</p>
+<p>The technical issue was therefore also a process issue. A vulnerability management process should identify, prioritise, assign and track remediation.</p>
+<h3>2. Authentication and Access Control</h3>
+<p>The database application account used a broad host definition:</p>
+<p><code>app_user@%</code></p>
+<p>This provided more access than was necessary for the application's intended use.</p>
+<h3>3. Network Segmentation</h3>
+<p>The monitoring container could reach the database network service.</p>
+<p>The environment did not initially separate the front-end and database network paths sufficiently.</p>
+<h3>4. Policy Implementation</h3>
+<p>Policies had been recorded in the governance tracker, but the corresponding controls were still marked as planned.</p>
+<p>This showed a gap between documented policy and actual implementation.</p>
+<h3>5. Security Monitoring</h3>
+<p>There was no implemented monitoring control at the beginning of the exercise.</p>
+<p>This created a governance gap because management could not demonstrate that the environment was being actively checked for important security conditions.</p>
+<h3>6. Governance Metrics</h3>
+<p>The initial metrics did not show effective control performance.</p>
+<p>This matters because management needs evidence that controls are operating, not simply evidence that policies exist.</p>
+<hr>
+<h1>2.3 Comparison With the Equifax Case</h1>
+<p>The lab scenario was designed around governance failures similar to those highlighted by the Equifax breach.</p>
+<p>The comparison focused on the following areas:</p>
+<table>
+<thead><tr>
+<th>Area</th>
+<th>Lab Simulation</th>
+<th>Equifax Comparison</th>
+</tr></thead><tbody>
+<tr>
+<td>Patch management</td>
+<td>Vulnerable Struts condition remained in the baseline</td>
+<td>Known vulnerability was not remediated in time</td>
+</tr>
+<tr>
+<td>Vulnerability management</td>
+<td>Baseline vulnerability was identified but controls were initially planned</td>
+<td>Vulnerability management and remediation processes failed</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>No monitoring control initially implemented</td>
+<td>Breach activity was not detected for an extended period</td>
+</tr>
+<tr>
+<td>Network segmentation</td>
+<td>Monitoring-to-database reachability existed in the baseline</td>
+<td>Weak segmentation contributed to the impact of the incident</td>
+</tr>
+<tr>
+<td>Access control</td>
+<td>Application database account had broad host permission</td>
+<td>Access and security control weaknesses contributed to risk</td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Policies existed but implementation was incomplete</td>
+<td>Accountability and oversight were important parts of the failure</td>
+</tr>
+<tr>
+<td>Metrics</td>
+<td>Baseline metrics showed weak control performance</td>
+<td>Effective measurement and follow-up are important for management oversight</td>
+</tr>
+</tbody></table>
+<p>The comparison is not intended to suggest that the lab environment reproduces the Equifax incident. The lab is a simplified local simulation used to demonstrate similar governance themes.</p>
+<hr>
+<h2>2.4 Lessons From Part 2</h2>
+<p>The main lesson from the simulation was that the vulnerability itself was only part of the problem.</p>
+<p>A vulnerable component can remain in an environment because the organisation has weak processes around identification, ownership, prioritisation, remediation and verification.</p>
+<p>The same applies to monitoring, access control and segmentation. These are not only technical configuration issues. They also need clear ownership, evidence, measurement and management follow-up.</p>
+<hr>
+<h1>Part 3 — Security and Governance Control Implementation</h1>
+<p>The controls were implemented after the baseline assessment.</p>
+<p>The purpose was to address the weaknesses identified in Parts 1 and 2 and then verify that the controls actually changed the security position.</p>
+<hr>
+<h2>3.1 Database Access Control</h2>
+<p>The baseline database account was:</p>
+<p><code>app_user@%</code></p>
+<p>The account was changed to:</p>
+<p><code>app_user@localhost</code></p>
+<p>The change was implemented through the database initialisation script so that the control is reproducible when the lab environment is rebuilt.</p>
+<p><img src="evidence/screenshots/P3-01_Database_Access_Control.png" alt="P3-01 — Database Access Control"></p>
+<p>The verification confirmed that the application account was restricted to the local database host.</p>
+<p>This control reduces unnecessary remote access to the application database account.</p>
+<hr>
+<h2>3.2 Network Segmentation</h2>
+<p>The Docker environment was redesigned using two networks:</p>
+<ul>
+<li><code>frontend_network</code></li>
+<li><code>backend_network</code></li>
+</ul>
+<p>The current architecture is:</p>
+<ul>
+<li><code>web_server</code> — connected to frontend and backend.</li>
+<li><code>monitoring_server</code> — connected to frontend only.</li>
+<li><code>database_server</code> — connected to backend only.</li>
+</ul>
+<p>This means the monitoring container is no longer able to reach the database service directly.</p>
+<p><img src="evidence/screenshots/P3-02 Network Segmentation evidence.png" alt="P3-02 — Network Segmentation"></p>
+<p>The control was verified by testing TCP/3306 from the monitoring container.</p>
+<p>The result was:</p>
+<p><code>TCP/3306 not reachable</code></p>
+<p>This provided evidence that the intended network separation was working.</p>
+<hr>
+<h2>3.3 Patch Management</h2>
+<p>The vulnerable application image was replaced with a locally built image using Apache Struts 2.3.37.</p>
+<p>The patched image was built from the original lab application and the Struts dependency was updated.</p>
+<p>The purpose was to remove the baseline Struts S2-045 condition from the simulated environment.</p>
+<p><img src="evidence/screenshots/P3-03_Post_Control_Verification.png" alt="P3-03 — Post-Control Verification"></p>
+<p>The post-control scanner no longer detected the baseline S2-045 condition.</p>
+<p>This was verified using the same safe scanner method used during the baseline assessment.</p>
+<hr>
+<h2>3.4 Security Monitoring</h2>
+<p>A monitoring script was implemented to check:</p>
+<ul>
+<li>Whether the web application is reachable on TCP/8080.</li>
+<li>Whether the database is reachable from the monitoring container on TCP/3306.</li>
+</ul>
+<p>The script records the results in:</p>
+<p><code>monitoring/security_monitor.log</code></p>
+<p><img src="evidence/screenshots/P3-04_Security_Monitoring.png" alt="P3-04 — Security Monitoring"></p>
+<p>The monitoring control produced evidence showing that the database was not reachable from the monitoring container.</p>
+<p>The monitoring implementation in this lab is a control demonstration rather than a full production monitoring platform. It was run on demand to produce evidence and logs for the exercise.</p>
+<hr>
+<h2>3.5 Governance Control Updates</h2>
+<p>The governance tracker was updated after the controls were implemented.</p>
+<p>The following controls were marked as implemented:</p>
+<ul>
+<li>CTL-001 — Patch Management Process.</li>
+<li>CTL-002 — Vulnerability Scanning.</li>
+<li>CTL-003 — Incident Response Process.</li>
+<li>CTL-004 — Security Monitoring.</li>
+</ul>
+<p>The three baseline risks were marked as mitigated.</p>
+<p>The simulated incident was closed after the controls were verified.</p>
+<p><img src="evidence/screenshots/P3-05_Governance_Control_Status.png" alt="P3-05 — Governance Control Status"></p>
+<p>The incident resolution recorded that the Struts condition had been remediated and verified, while database access restriction and network segmentation had also been implemented and verified.</p>
+<hr>
+<h2>3.6 Post-Control Verification</h2>
+<p>The final verification confirmed the main control outcomes.</p>
+<p><img src="evidence/screenshots/P3-06_Post_Control_Verification.png" alt="P3-06 — Post-Control Verification"></p>
+<p>The key changes were:</p>
+<table>
+<thead><tr>
+<th>Area</th>
+<th>Baseline</th>
+<th>Post-Control</th>
+</tr></thead><tbody>
+<tr>
+<td>Struts S2-045 condition</td>
+<td>Detected</td>
+<td>Not detected</td>
+</tr>
+<tr>
+<td>Database application account</td>
+<td><code>app_user@%</code></td>
+<td><code>app_user@localhost</code></td>
+</tr>
+<tr>
+<td>Monitoring → Database TCP/3306</td>
+<td>Reachable</td>
+<td>Not reachable</td>
+</tr>
+<tr>
+<td>Web exposure</td>
+<td>Local only</td>
+<td>Local only</td>
+</tr>
+<tr>
+<td>Governance controls</td>
+<td>Planned</td>
+<td>4 implemented</td>
+</tr>
+<tr>
+<td>Baseline risks</td>
+<td>Open</td>
+<td>3 mitigated</td>
+</tr>
+<tr>
+<td>Simulated incident</td>
+<td>Open</td>
+<td>Closed</td>
+</tr>
+</tbody></table>
+<p>The exercise did not claim that every possible database or infrastructure security issue was eliminated. For example, the lab's root database account configuration was not used as evidence of complete database account hardening.</p>
+<hr>
+<h1>Part 4 — Metrics and Executive Reporting</h1>
+<h2>4.1 Metrics Framework</h2>
+<p>The metrics framework was designed around controls that could actually be demonstrated with evidence from the lab.</p>
+<p>The framework measures:</p>
+<ol>
+<li>Critical Vulnerability Status.</li>
+<li>Database Access Control Compliance.</li>
+<li>Network Segmentation Status.</li>
+<li>Security Monitoring Coverage.</li>
+<li>Governance Control Implementation.</li>
+<li>Open Security Risks.</li>
+</ol>
+<p>The metrics were deliberately based on the evidence available from the simulation.</p>
+<p>I did not claim a 100% patch compliance figure because the lab did not contain enough data to support that claim.</p>
+<hr>
+<h2>4.2 Metrics Results</h2>
+<p>The metrics script produced six results.</p>
+<table>
+<thead><tr>
+<th>Metric</th>
+<th>Result</th>
+<th>Target</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Critical Vulnerability Status</td>
+<td>NOT_DETECTED</td>
+<td>NOT_DETECTED</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Database Access Control</td>
+<td>RESTRICTED</td>
+<td>RESTRICTED</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Database Network Isolation</td>
+<td>NOT_REACHABLE</td>
+<td>NOT_REACHABLE</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Web Application Exposure</td>
+<td>LOCAL_ONLY</td>
+<td>LOCAL_ONLY</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Governance Control Implementation</td>
+<td>4</td>
+<td>4</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Baseline Risk Treatment</td>
+<td>3</td>
+<td>3</td>
+<td>PASS</td>
+</tr>
+</tbody></table>
+<p>The results were generated from the vulnerability scanner and governance tracker rather than manually entering the final values.</p>
+<hr>
+<h2>4.3 Executive Dashboard</h2>
+<p>The executive dashboard provides a management-level view of the control results.</p>
+<p><img src="evidence/screenshots/P4-01_Executive_Dashboard.png" alt="P4-01 — Executive Dashboard"></p>
+<p>The dashboard shows:</p>
+<ul>
+<li>0 critical vulnerabilities detected by the post-control scanner.</li>
+<li>4 of 4 governance controls implemented.</li>
+<li>3 of 3 baseline risks treated.</li>
+<li>The status and evidence for each control metric.</li>
+</ul>
+<p>The dashboard is intended to give management a quick view of whether the controls demonstrated in the lab are operating as expected.</p>
+<hr>
+<h2>4.4 Control Outcomes Visualization</h2>
+<p>A separate visualization was created to compare the baseline position with the post-control position.</p>
+<p><img src="evidence/screenshots/P4-02 — Control Outcomes Visualization.png" alt="P4-02 — Control Outcomes Visualization"></p>
+<p>The visualization covers:</p>
+<ul>
+<li>Critical vulnerability detection.</li>
+<li>Database access restriction.</li>
+<li>Database network isolation.</li>
+<li>Governance controls implemented.</li>
+<li>Baseline risks mitigated.</li>
+</ul>
+<p>The chart makes the change between the baseline and post-control states easier to see without requiring management to review the individual command outputs.</p>
+<hr>
+<h1>4.5 Board-Level Summary</h1>
+<h2>Executive Summary</h2>
+<p>The baseline assessment identified several governance weaknesses in the simulated environment. The main issues were a vulnerable Struts condition, broad database account permissions, insufficient network separation, and a lack of implemented monitoring controls.</p>
+<p>Controls were then implemented and verified.</p>
+<p>The application was rebuilt using a newer Struts dependency, the application database account was restricted to <code>localhost</code>, the Docker network was separated into frontend and backend networks, and a security monitoring script was introduced.</p>
+<p>Post-control verification showed that the baseline Struts condition was no longer detected, the application database account was restricted, and monitoring could no longer reach the database on TCP/3306.</p>
+<p>The governance tracker was also updated to show four implemented controls, three mitigated baseline risks, and closure of the simulated incident.</p>
+<hr>
+<h2>Management Recommendations</h2>
+<p>Based on the exercise, the following actions would be appropriate in a real organisation:</p>
+<h3>1. Make vulnerability remediation measurable</h3>
+<p>Critical vulnerabilities should have an assigned owner, remediation deadline and verification step.</p>
+<h3>2. Restrict database access</h3>
+<p>Database accounts should use the minimum host and privilege scope required for their function.</p>
+<h3>3. Maintain network separation</h3>
+<p>Systems that do not require direct database access should not have a network path to the database.</p>
+<h3>4. Monitor important security conditions</h3>
+<p>Security monitoring should generate evidence that can be reviewed by security and management teams.</p>
+<h3>5. Link policies to implemented controls</h3>
+<p>A policy should not be considered effective simply because it exists in a policy repository. There should be evidence that the associated controls are implemented and operating.</p>
+<h3>6. Report control performance to management</h3>
+<p>Management reporting should focus on measurable control outcomes, risks and unresolved issues rather than only listing policies and technical activities.</p>
+<hr>
+<h1>Conclusion</h1>
+<p>This practical lab demonstrated the relationship between technical security controls and information security governance.</p>
+<p>The initial environment showed how a vulnerable application, broad database access and weak network separation can create governance risks when controls are not implemented and verified.</p>
+<p>The second stage showed that the same weakness can be viewed from several governance perspectives: vulnerability management, access control, network security, monitoring, policy implementation and accountability.</p>
+<p>The final stages demonstrated the importance of verification. Controls were not simply marked as complete. They were tested again after implementation.</p>
+<p>The final results showed:</p>
+<ul>
+<li>The baseline Struts S2-045 condition was no longer detected.</li>
+<li>The application database account was restricted from <code>%</code> to <code>localhost</code>.</li>
+<li>Monitoring could no longer reach the database service on TCP/3306.</li>
+<li>Security monitoring produced evidence through a dedicated log.</li>
+<li>Four governance controls were marked as implemented.</li>
+<li>Three baseline risks were marked as mitigated.</li>
+<li>The simulated incident was closed.</li>
+<li>Six management-level metrics were generated.</li>
+<li>An executive dashboard and control-outcome visualization were produced.</li>
+</ul>
+<p>The main lesson from the lab is that security governance needs evidence. A policy, risk register or control statement is useful, but it becomes much more meaningful when the organisation can show that the control was implemented, tested and measured.</p>
+<hr>
+<h1>Evidence Appendix</h1>
+<h2>Part 1 — Baseline Evidence</h2>
+<ol>
+<li>P1-01 — Docker Images</li>
+<li>P1-02 — Running Docker Containers</li>
+<li>P1-03 — Docker Network</li>
+<li>P1-04 — Local Web Application Verification</li>
+<li>P1-05 — Synthetic Database Verification</li>
+<li>P1-06 — Struts S2-045 Baseline Detection</li>
+<li>P1-07 — Baseline Database Authentication</li>
+<li>P1-08 — Baseline Database Network Reachability</li>
+<li>P1-09 — Baseline Vulnerability Scanner Results</li>
+<li>P1-10 — Baseline Governance Tracker Dashboard</li>
+</ol>
+<h2>Part 2 — Governance Failure Evidence</h2>
+<ol>
+<li>P2-01 — Authorized Attack Simulation Log</li>
+<li>P2-02 — Governance Failure Analysis</li>
+</ol>
+<h2>Part 3 — Control Evidence</h2>
+<ol>
+<li>P3-01 — Database Access Control</li>
+<li>P3-02 — Network Segmentation</li>
+<li>P3-03 — Post-Control Vulnerability Verification</li>
+<li>P3-04 — Security Monitoring</li>
+<li>P3-05 — Governance Control Status</li>
+<li>P3-06 — Final Post-Control Verification</li>
+</ol>
+<h2>Part 4 — Executive Reporting Evidence</h2>
+<ol>
+<li>P4-01 — Executive Dashboard</li>
+<li>P4-02 — Control Outcomes Visualization</li>
+</ol>
+<hr>
+<h1>Key Repository Files</h1>
+<p>The main files supporting the assessment are:</p>
+<ul>
+<li><code>docker-compose.yml</code></li>
+<li><code>Dockerfile.patched</code></li>
+<li><code>pom.xml</code></li>
+<li><code>database_init/init.sql</code></li>
+<li><code>database_init/02_harden_accounts.sql</code></li>
+<li><code>vulnerability_scanner.py</code></li>
+<li><code>simulate_attack.py</code></li>
+<li><code>analyze_governance_failures.py</code></li>
+<li><code>governance_tracker.py</code></li>
+<li><code>initialize_governance.py</code></li>
+<li><code>update_governance_controls.py</code></li>
+<li><code>metrics.py</code></li>
+<li><code>visualizations.py</code></li>
+<li><code>monitoring/security_monitor.sh</code></li>
+<li><code>vulnerability_report.json</code></li>
+<li><code>attack_log.json</code></li>
+<li><code>governance_failure_report.json</code></li>
+<li><code>governance_data.json</code></li>
+<li><code>metrics_report.json</code></li>
+<li><code>metrics_framework.md</code></li>
+<li><code>controls_report.md</code></li>
+<li><code>dashboard_guide.md</code></li>
+<li><code>executive_dashboard.html</code></li>
+<li><code>board_report.md</code></li>
+<li><code>control_outcomes_visualization.png</code></li>
+</ul>
+<hr>
+<h1>Final Statement</h1>
+<p>This lab was completed as an isolated security governance simulation using Docker and synthetic data.</p>
+<p>The technical findings were used to demonstrate governance issues, implement controls, verify their effectiveness and produce evidence that could be presented to management.</p>
+<p>The results show the importance of connecting security policies and risk management with actual technical controls, verification and measurable outcomes.</p>
+</body>
+</html>

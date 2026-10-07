@@ -1,0 +1,46 @@
+services:
+
+  web:
+    image: grc102-struts-patched:2.3.37
+    platform: linux/amd64
+    container_name: web_server
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - frontend_network
+      - backend_network
+    restart: "no"
+
+  database:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: database_server
+    environment:
+      MYSQL_ROOT_PASSWORD: lab_root_password
+      MYSQL_DATABASE: customer_data
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: lab_app_password
+    volumes:
+      - ./database_init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend_network
+    restart: "no"
+
+  monitoring:
+    image: ubuntu:20.04
+    platform: linux/amd64
+    container_name: monitoring_server
+    volumes:
+      - ./monitoring:/monitoring
+    command: tail -f /dev/null
+    networks:
+      - frontend_network
+    restart: "no"
+
+networks:
+
+  frontend_network:
+    driver: bridge
+
+  backend_network:
+    driver: bridge

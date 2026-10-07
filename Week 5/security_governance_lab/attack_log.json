@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-10-07T22:48:51.595524+03:00",
+  "attack_type": "Struts S2-045 Exploitation Simulation",
+  "target": "web_server",
+  "success": true,
+  "execution_mode": "SAFE_SIMULATION",
+  "actual_exploit_executed": false,
+  "data_accessed": "customer_data database",
+  "records_affected": 3
+}

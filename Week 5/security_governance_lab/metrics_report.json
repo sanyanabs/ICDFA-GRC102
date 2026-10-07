@@ -1,0 +1,57 @@
+{
+  "report_timestamp": "2026-10-07T23:53:16.039850+03:00",
+  "environment": "Local ICDFA GRC102 Security Governance Lab",
+  "metrics": [
+    {
+      "metric": "Critical Vulnerability Status",
+      "result": "NOT_DETECTED",
+      "target": "NOT_DETECTED",
+      "status": "PASS",
+      "evidence": "X-Vulnerable=None"
+    },
+    {
+      "metric": "Database Access Control",
+      "result": "RESTRICTED",
+      "target": "RESTRICTED",
+      "status": "PASS",
+      "evidence": "app_user\tlocalhost"
+    },
+    {
+      "metric": "Database Network Isolation",
+      "result": "NOT_REACHABLE",
+      "target": "NOT_REACHABLE",
+      "status": "PASS",
+      "evidence": "TCP/3306 not reachable"
+    },
+    {
+      "metric": "Web Application Exposure",
+      "result": "LOCAL_ONLY",
+      "target": "LOCAL_ONLY",
+      "status": "PASS",
+      "evidence": "127.0.0.1:8080->8080/tcp"
+    },
+    {
+      "metric": "Governance Control Implementation",
+      "result": 4,
+      "target": 4,
+      "status": "PASS",
+      "evidence": [
+        "CTL-001",
+        "CTL-002",
+        "CTL-003",
+        "CTL-004"
+      ]
+    },
+    {
+      "metric": "Baseline Risk Treatment",
+      "result": 3,
+      "target": 3,
+      "status": "PASS",
+      "evidence": [
+        "RSK-001",
+        "RSK-002",
+        "RSK-003"
+      ]
+    }
+  ]
+}

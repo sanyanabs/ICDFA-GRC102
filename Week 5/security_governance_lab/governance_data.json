@@ -1,0 +1,154 @@
+{
+  "policies": [
+    {
+      "id": "POL-001",
+      "name": "Patch Management Policy",
+      "description": "Policy governing the timely identification, testing and application of security patches.",
+      "owner": "IT Manager",
+      "approval_date": "2026-10-07",
+      "review_date": "2027-10-07",
+      "status": "Active"
+    },
+    {
+      "id": "POL-002",
+      "name": "Vulnerability Management Policy",
+      "description": "Policy governing the identification, assessment and remediation of security vulnerabilities.",
+      "owner": "Security Engineer",
+      "approval_date": "2026-10-07",
+      "review_date": "2027-10-07",
+      "status": "Active"
+    },
+    {
+      "id": "POL-003",
+      "name": "Incident Response Policy",
+      "description": "Policy governing the detection, escalation, response and recovery from security incidents.",
+      "owner": "Security Director",
+      "approval_date": "2026-10-07",
+      "review_date": "2027-10-07",
+      "status": "Active"
+    }
+  ],
+  "controls": [
+    {
+      "id": "CTL-001",
+      "name": "Patch Management Process",
+      "description": "Process for identifying, assessing, testing and applying security patches.",
+      "policy_id": "POL-001",
+      "owner": "IT Manager",
+      "implementation_date": "2026-10-07",
+      "status": "Implemented"
+    },
+    {
+      "id": "CTL-002",
+      "name": "Vulnerability Scanning",
+      "description": "Regular scanning of systems for known security vulnerabilities.",
+      "policy_id": "POL-002",
+      "owner": "Security Engineer",
+      "implementation_date": "2026-10-07",
+      "status": "Implemented"
+    },
+    {
+      "id": "CTL-003",
+      "name": "Incident Response Process",
+      "description": "Defined process for detecting, escalating, investigating and resolving security incidents.",
+      "policy_id": "POL-003",
+      "owner": "Security Director",
+      "implementation_date": "2026-10-07",
+      "status": "Implemented"
+    },
+    {
+      "id": "CTL-004",
+      "name": "Security Monitoring",
+      "description": "Monitoring control that checks web application availability and verifies database network isolation.",
+      "policy_id": "POL-003",
+      "owner": "Security Engineer",
+      "implementation_date": "2026-10-07",
+      "status": "Implemented"
+    }
+  ],
+  "risks": [
+    {
+      "id": "RSK-001",
+      "name": "Unpatched Vulnerabilities",
+      "description": "Risk of exploitation due to known vulnerabilities remaining unpatched.",
+      "likelihood": "High",
+      "impact": "High",
+      "owner": "Security Engineer",
+      "mitigation_plan": "Implement formal patch management and vulnerability remediation tracking.",
+      "status": "Mitigated"
+    },
+    {
+      "id": "RSK-002",
+      "name": "Insufficient Network Segmentation",
+      "description": "Risk of lateral movement because systems share the same network segment.",
+      "likelihood": "Medium",
+      "impact": "High",
+      "owner": "Network Engineer",
+      "mitigation_plan": "Implement network segmentation based on least privilege.",
+      "status": "Mitigated"
+    },
+    {
+      "id": "RSK-003",
+      "name": "Weak Database Access Controls",
+      "description": "Risk of unauthorized database access due to broad application account host permissions.",
+      "likelihood": "Medium",
+      "impact": "High",
+      "owner": "Database Administrator",
+      "mitigation_plan": "Restrict database account access and review database privileges.",
+      "status": "Mitigated"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-001",
+      "name": "Simulated Web Server Exposure",
+      "description": "Baseline security simulation identified a vulnerable Struts web application.",
+      "date": "2026-10-07",
+      "severity": "High",
+      "affected_systems": "web_server",
+      "root_cause": "Unpatched Apache Struts S2-045 vulnerability (CVE-2017-5638).",
+      "resolution": "Struts vulnerability remediated and verified by post-control scan. Database access restriction and network segmentation were implemented and verified.",
+      "status": "Closed"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "MET-001",
+      "name": "Patch Compliance",
+      "description": "Percentage of systems with required security patches applied.",
+      "target": 95.0,
+      "actual": 0.0,
+      "period": "October 2026",
+      "trend": "Needs Improvement"
+    },
+    {
+      "id": "MET-002",
+      "name": "Critical Vulnerability Remediation Time",
+      "description": "Average time to remediate critical vulnerabilities in days.",
+      "target": 7.0,
+      "actual": 0.0,
+      "period": "October 2026",
+      "trend": "Baseline"
+    },
+    {
+      "id": "MET-003",
+      "name": "Security Incidents",
+      "description": "Number of security incidents recorded during the reporting period.",
+      "target": 0.0,
+      "actual": 1.0,
+      "period": "October 2026",
+      "trend": "Under Review"
+    }
+  ],
+  "audits": [
+    {
+      "id": "AUD-001",
+      "name": "GRC102 Baseline Security Governance Assessment",
+      "description": "Baseline assessment of the simulated web application, database and network environment.",
+      "date": "2026-10-07",
+      "auditor": "GRC102 Lab Assessment",
+      "findings": "Unpatched Struts vulnerability, broad database account host permission and insufficient network segmentation were identified.",
+      "recommendations": "Implement patch management, strengthen database access controls and implement network segmentation."
+    }
+  ]
+}

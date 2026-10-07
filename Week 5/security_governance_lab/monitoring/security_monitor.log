@@ -1,0 +1,5 @@
+========================================
+Security Monitoring Check: 2026-10-07T20:37:22+00:00
+[OK] Web application is reachable on TCP/8080
+[OK] Database TCP/3306 is not reachable from monitoring container
+Monitoring check completed.
